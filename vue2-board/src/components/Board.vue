@@ -26,7 +26,7 @@
       align="center"
       @change="handlePageChange"
     ></b-pagination>
-    <b-modal id="modal-1" title="BootstrapVue" @ok="onSumit">
+    <b-modal id="modal-1" title="글쓰기" @ok="onSumit">
       <b-form-group
         label="Name"
         label-for="name-input"
