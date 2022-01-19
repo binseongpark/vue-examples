@@ -4,17 +4,11 @@ export const rootComputed = {
   console: () => console,
   ...mapState('board', [
     'list',
-    'yesno',
-    'test'
   ])
 }
 
 export const rootMethods = {
   ...mapActions('board', [
-    'login'
+    'getPosts'
   ]),
-  ...mapActions('board', [
-    'getList',
-    'getYesNo'
-  ])
 }

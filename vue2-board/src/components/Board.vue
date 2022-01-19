@@ -6,11 +6,17 @@
       <b-button v-b-modal.modal-1>글쓰기</b-button>
     </div>
 
-    <b-table :items="items" :busy="isBusy" class="mt-3" outlined>
+    <b-table :items="list" :busy="isBusy" class="mt-3" outlined>
       <template #table-busy>
         <div class="text-center text-danger my-2">
           <b-spinner class="align-middle"></b-spinner>
           <strong>Loading...</strong>
+        </div>
+      </template>
+
+      <template #cell(image)="data">
+        <div>
+          <img width="30px" :src="data.item.image" />
         </div>
       </template>
     </b-table>
@@ -18,8 +24,9 @@
       v-model="currentPage"
       :total-rows="rows"
       align="center"
+      @change="handlePageChange"
     ></b-pagination>
-    <b-modal id="modal-1" title="BootstrapVue">
+    <b-modal id="modal-1" title="BootstrapVue" @ok="onSumit">
       <b-form-group
         label="Name"
         label-for="name-input"
@@ -38,25 +45,51 @@
 </template>
 
 <script>
+import { rootComputed, rootMethods } from "@/store/helpers";
+
 export default {
+  created: function () {
+    this.getPosts({
+      page: 0,
+      size: 5,
+    }).then((value) => {
+      console.log("@@@@ value: ", value);
+    });
+  },
+  computed: {
+    ...rootComputed,
+  },
   data() {
     return {
       isBusy: false,
-      items: [
-        { first_name: "Dickerson", last_name: "MacDonald", age: 40 },
-        { first_name: "Larsen", last_name: "Shaw", age: 21 },
-        { first_name: "Geneva", last_name: "Wilson", age: 89 },
-        { first_name: "Jami", last_name: "Carney", age: 38 },
-      ],
       rows: 100,
       currentPage: 1,
       nameState: false,
       name: "",
+      fields: ["id", "name", "image"],
     };
   },
   methods: {
+    ...rootMethods,
     toggleBusy() {
       this.isBusy = !this.isBusy;
+    },
+    handlePageChange(e) {
+      console.log(e - 1);
+      this.getPosts({
+        page: e - 1,
+        size: 5,
+      }).then((value) => {
+        console.log("@@@@ value: ", value);
+      });
+    },
+    onSumit(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      alert("post call");
+
+      this.$nextTick(() => {
+        this.$bvModal.hide("modal-1");
+      });
     },
   },
 };
